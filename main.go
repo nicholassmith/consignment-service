@@ -19,13 +19,13 @@ type repository interface {
 	Create(*pb.Consignment) (*pb.Consignment, error)
 }
 
-//dummy repo
+//Repository is a faux data store
 type Repository struct {
 	mu          sync.RWMutex
 	consigments []*pb.Consignment
 }
 
-// Create...
+//Create adds a new assignment
 func (repo *Repository) Create(consignment *pb.Consignment) (*pb.Consignment, error) {
 	repo.mu.Lock()
 	updated := append(repo.consigments, consignment)
