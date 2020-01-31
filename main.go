@@ -17,6 +17,7 @@ const (
 
 type repository interface {
 	Create(*pb.Consignment) (*pb.Consignment, error)
+	GetAll() []*pb.Consignment
 }
 
 //Repository is a faux data store
@@ -34,6 +35,11 @@ func (repo *Repository) Create(consignment *pb.Consignment) (*pb.Consignment, er
 	return consignment, nil
 }
 
+//GetAll returns all consignments
+func (repo *Repository) GetAll() []*pb.Consignment {
+	return repo.consigments
+}
+
 type service struct {
 	repo repository
 }
@@ -45,6 +51,11 @@ func (s *service) CreateConsignment(cts context.Context, req *pb.Consignment) (*
 	}
 
 	return &pb.Response{Created: true, Consignment: consignment}, nil
+}
+
+func (s *service) GetConsignments(cts context.Context, req *pb.GetRequest) (*pb.Response, error) {
+	consignments := s.repo.GetAll()
+	return &pb.Response{Consignments: consignments}, nil
 }
 
 func main() {
