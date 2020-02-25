@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/micro/go-micro"
 
@@ -56,11 +57,11 @@ func main() {
 	repo := &Repository{}
 
 	srv := micro.NewService(
-		micro.Name("consignment.service")
+		micro.Name("consignment.service"),
 	)
 
 	srv.Init()
-	
+
 	pb.RegisterShippingServiceHandler(srv.Server(), &service{repo})
 
 	if err := srv.Run(); err != nil {
