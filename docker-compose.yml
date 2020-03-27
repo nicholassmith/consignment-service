@@ -1,0 +1,36 @@
+# docker-compose.yml
+version: '3.5'
+
+services:
+  consignment-service:
+    restart: always
+    container_name: "consignment-service"
+    build: .
+    ports: 
+      - 50051
+    links:
+      - datastore
+    networks: 
+      - shippy-backend-tier
+      - consignment-tier
+    environment: 
+      DB_HOST: "mongodb://datastore:27017"
+      MICRO_ADDRESS: ":50051"
+  datastore:
+    image: mongo:latest
+    container_name: "datastore"
+    environment: 
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    volumes: 
+      - ./data/db:/data/db
+    networks: 
+      - consignment-tier
+    ports: 
+      - 27017
+    command: mongod --logpath=/dev/null
+networks: 
+  consignment-tier:
+    name: consignment-tier
+  shippy-backend-tier:
+    name: shippy-backend-tier
